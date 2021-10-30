@@ -1,0 +1,72 @@
+FROM ubuntu:20.04
+
+LABEL maintainer="TienDang <tiendang.memo@gmail.com>"
+
+RUN set -eux \
+    # Add the "PHP 7" ppa
+    && apt-get update \
+    && apt-get install -y software-properties-common \
+    && add-apt-repository -y ppa:ondrej/php \
+    #
+    #--------------------------------------------------------------------------
+    # Software's Installation
+    #--------------------------------------------------------------------------
+    #
+    && echo 'DPkg::options { "--force-confdef"; };' >> /etc/apt/apt.conf \
+    # Install "PHP Extensions", "libraries", "Software's"
+    && apt-get update \
+    && apt-get upgrade -y \
+    && apt-get install -y --allow-downgrades --allow-remove-essential \
+        --allow-change-held-packages \
+        php7.4-cli \
+        php7.4-common \
+        php7.4-curl \
+        php7.4-intl \
+        php7.4-xml \
+        php7.4-mbstring \
+        php7.4-mysql \
+        php7.4-pgsql \
+        php7.4-sqlite \
+        php7.4-sqlite3 \
+        php7.4-zip \
+        php7.4-bcmath \
+        php7.4-gd \
+        php7.4-dev \
+        php7.4-memcached \
+        pkg-config \
+        libwebp-dev \
+        libcurl4-openssl-dev \
+        libedit-dev \
+        libssl-dev \
+        libxml2-dev \
+        xz-utils \
+        libsqlite3-dev \
+        postgresql-client \
+        rsync \
+        sqlite3 \
+        gcc \
+        git \
+        curl \
+        wget \
+        vim \
+        tree \
+        yasm \
+    && apt-get clean \
+    #####################################
+    # Composer:
+    #####################################
+    && curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+
+
+# always run apt update when start and after add new source list, then clean up at end.
+RUN apt-get update -yqq && \
+	apt-get install -yqq \
+		apt-utils \
+		libzip-dev \
+		zip \
+		unzip
+
+# Clean up
+RUN apt-get clean && \
+    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /var/cache/* && \
+    rm /var/log/lastlog /var/log/faillog
