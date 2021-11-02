@@ -64,10 +64,7 @@ RUN set -eux \
     #####################################
     # Composer:
     #####################################
-    # Install composer and add its bin to the PATH.
-    && curl -s http://getcomposer.org/installer | php \
-    && echo "export PATH=${PATH}:/var/www/vendor/bin" >> ~/.bashrc \
-    && mv composer.phar /usr/local/bin/composer
+    && curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
 
 # always run apt update when start and after add new source list, then clean up at end.
